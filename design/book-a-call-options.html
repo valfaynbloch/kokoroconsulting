@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Book a Call Options</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  /* Kokoro v2 look: white, one burgundy accent, Shippori Mincho + Zen Kaku Gothic New */
+  :root {
+    --accent: #7A1E1E;
+    --accent-soft: #F3E3DF;
+    --ink: #1A1A1A;
+    --muted: #555555;
+    --line: #E6E3DD;
+    --paper: #F6F5F1;
+    --white: #FFFFFF;
+    --head: "Shippori Mincho", Georgia, serif;
+    --body: "Zen Kaku Gothic New", system-ui, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--white); color: var(--ink); font-family: var(--body); font-size: 17px; line-height: 1.7; }
+  h1, h2, h3 { font-family: var(--head); font-weight: 600; line-height: 1.25; margin: 0 0 .5em; }
+  p { margin: 0 0 1em; }
+  a { color: var(--ink); }
+  .wrap { max-width: 1240px; margin: 0 auto; padding: 0 32px; }
+  @media (max-width: 600px) { .wrap { padding: 0 16px; } }
+
+  /* Labels between options (not part of the design) */
+  .intro { padding: 56px 0 24px; }
+  .intro h1 { font-size: clamp(2rem, 4vw, 2.8rem); }
+  .intro p { color: var(--muted); max-width: 680px; }
+  .label { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 16px; padding: 64px 0 20px; border-top: 1px dashed #C9C7C2; margin-top: 40px; }
+  .label .tag { font-family: var(--head); font-size: 1.6rem; color: var(--accent); }
+  .label .what { font-weight: 700; }
+  .label .why { color: var(--muted); font-size: .95rem; flex-basis: 100%; }
+
+  .btn { display: inline-block; background: var(--accent); color: var(--white); text-decoration: none; padding: 16px 32px; border-radius: 4px; font-weight: 500; border: 0; font: inherit; cursor: pointer; }
+  .btn.light { background: var(--white); color: var(--ink); font-weight: 700; }
+  .btn.ghost { background: none; border: 1.5px solid var(--ink); color: var(--ink); padding: 14px 28px; }
+  .facts { display: flex; flex-wrap: wrap; gap: 10px; margin: 0 0 28px; padding: 0; list-style: none; }
+  .facts li { border: 1px solid currentColor; border-radius: 999px; padding: 4px 16px; font-size: .9rem; opacity: .9; }
+
+  /* ───── Option A: calendar on the page ───── */
+  .a { background: var(--paper); padding: 72px 56px; display: grid; grid-template-columns: 1fr 1.1fr; gap: 56px; align-items: start; }
+  @media (max-width: 900px) { .a { grid-template-columns: 1fr; padding: 40px 20px; gap: 32px; } }
+  .a h2 { font-size: clamp(2rem, 4vw, 2.8rem); }
+  .a .lead { font-size: 1.1rem; color: #3A3A3A; }
+  .a .facts { color: var(--accent); }
+  .a .talk { list-style: none; padding: 0; margin: 0; }
+  .a .talk li { padding: 12px 0 12px 32px; border-top: 1px solid var(--line); position: relative; }
+  .a .talk li::before { content: "心"; font-family: var(--head); color: var(--accent); position: absolute; left: 0; top: 12px; }
+  .cal { background: var(--white); border: 1px solid var(--line); padding: 28px; }
+  .cal-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+  .cal-head strong { font-family: var(--head); font-size: 1.25rem; font-weight: 600; }
+  .cal-head span { color: var(--muted); letter-spacing: .2em; }
+  .days { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; text-align: center; font-size: .9rem; }
+  .days .dn { color: var(--muted); font-size: .75rem; letter-spacing: .1em; padding-bottom: 4px; }
+  .days span { padding: 8px 0; border-radius: 4px; color: #B5B2AC; }
+  .days .open { color: var(--ink); background: var(--accent-soft); font-weight: 500; }
+  .days .picked { background: var(--accent); color: var(--white); font-weight: 700; }
+  .slots-title { margin: 24px 0 10px; font-weight: 500; }
+  .slots { display: flex; flex-wrap: wrap; gap: 8px; }
+  .slots span { border: 1px solid var(--line); padding: 8px 16px; border-radius: 4px; font-size: .9rem; }
+  .slots .picked { border-color: var(--accent); color: var(--accent); font-weight: 700; }
+  .tz { color: var(--muted); font-size: .8rem; margin: 14px 0 20px; }
+
+  /* ───── Option B: what to expect + one button ───── */
+  .b { background: var(--accent); color: var(--white); padding: 80px 56px; }
+  @media (max-width: 900px) { .b { padding: 48px 20px; } }
+  .b-top { display: grid; grid-template-columns: 1.2fr 1fr; gap: 48px; align-items: end; margin-bottom: 56px; }
+  @media (max-width: 900px) { .b-top { grid-template-columns: 1fr; gap: 24px; } }
+  .b h2 { font-size: clamp(2.2rem, 4.5vw, 3.2rem); }
+  .b .lead { color: var(--accent-soft); font-size: 1.1rem; margin: 0; }
+  .b-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 48px; }
+  @media (max-width: 800px) { .b-steps { grid-template-columns: 1fr; } }
+  .b-step { border-top: 1px solid rgba(255,255,255,.4); padding-top: 20px; }
+  .b-step .n { font-family: var(--head); font-size: 1.8rem; color: var(--accent-soft); }
+  .b-step h3 { font-size: 1.3rem; margin: 6px 0 6px; }
+  .b-step p { color: var(--accent-soft); margin: 0; font-size: .95rem; }
+  .b-cta { display: flex; flex-wrap: wrap; align-items: center; gap: 20px 32px; }
+  .b-cta .facts { margin: 0; }
+
+  /* ───── Option C: a short note first ───── */
+  .c { border: 1px solid var(--line); display: grid; grid-template-columns: 1fr 1fr; }
+  @media (max-width: 900px) { .c { grid-template-columns: 1fr; } }
+  .c-left { padding: 72px 56px; background: var(--paper); position: relative; }
+  @media (max-width: 900px) { .c-left { padding: 40px 20px; } }
+  .c-left h2 { font-size: clamp(2rem, 4vw, 2.6rem); }
+  .c-left .lead { color: #3A3A3A; font-size: 1.1rem; }
+  .c-left .facts { color: var(--accent); }
+  .c-left .quote { font-family: var(--head); font-size: 1.3rem; line-height: 1.5; border-left: 2px solid var(--accent); padding-left: 20px; margin-top: 32px; }
+  .c-left .sig { font-size: .9rem; color: var(--muted); padding-left: 22px; }
+  .c-right { padding: 72px 56px; }
+  @media (max-width: 900px) { .c-right { padding: 40px 20px; } }
+  .step-bar { display: flex; gap: 10px; margin-bottom: 28px; font-size: .85rem; }
+  .step-bar span { flex: 1; border-top: 3px solid var(--line); padding-top: 8px; color: var(--muted); }
+  .step-bar .on { border-color: var(--accent); color: var(--accent); font-weight: 700; }
+  .field { margin-bottom: 18px; }
+  .field label { display: block; font-weight: 500; margin-bottom: 6px; font-size: .95rem; }
+  .field .hint { color: var(--muted); font-weight: 400; }
+  .field input, .field textarea, .field select { width: 100%; font: inherit; font-size: 1rem; padding: 12px 14px; border: 1px solid #C9C7C2; border-radius: 4px; background: var(--white); color: var(--ink); }
+  .field textarea { min-height: 110px; resize: vertical; }
+  .c-right small { display: block; color: var(--muted); margin-top: 14px; }
+
+  .bird { position: absolute; right: 32px; top: 32px; }
+  footer.note { color: var(--muted); font-size: .9rem; padding: 48px 0 64px; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <div class="intro">
+    <h1>Book a call: three options</h1>
+    <p>Each option replaces the burgundy "Let's begin with a conversation" block at the bottom of the Kokoro homepage. They all use the same details: a free video call of 45–60 minutes. Pick one, or mix parts you like.</p>
+  </div>
+
+  <!-- ═══════════ OPTION A ═══════════ -->
+  <div class="label">
+    <span class="tag">A</span><span class="what">Calendar right on the page</span>
+    <span class="why">Visitors see what the call is about and pick a time without leaving your site. Easiest for them, and your calendar updates by itself.</span>
+  </div>
+
+  <section class="a" aria-label="Option A">
+    <div>
+      <h2>Let's begin with a conversation.</h2>
+      <p class="lead">Tell me about your mission. If we're aligned in purpose, the next step is a diagnosis of where to go from here.</p>
+      <ul class="facts">
+        <li>Free</li><li>45–60 min</li><li>Video call</li><li>English or Spanish</li>
+      </ul>
+      <p style="font-weight:500; margin-bottom:4px">What we'll talk about</p>
+      <ul class="talk">
+        <li>Your mission and the land or people you care for</li>
+        <li>Where you feel stuck, and what you've already tried</li>
+        <li>Whether working together makes sense, honestly</li>
+      </ul>
+    </div>
+
+    <div class="cal" aria-label="Example booking calendar">
+      <div class="cal-head"><span aria-hidden="true">‹</span><strong>November 2026</strong><span aria-hidden="true">›</span></div>
+      <div class="days">
+        <div class="dn">MO</div><div class="dn">TU</div><div class="dn">WE</div><div class="dn">TH</div><div class="dn">FR</div><div class="dn">SA</div><div class="dn">SU</div>
+        <span></span><span></span><span></span><span></span><span></span><span></span><span>1</span>
+        <span>2</span><span class="open">3</span><span>4</span><span class="open">5</span><span>6</span><span>7</span><span>8</span>
+        <span>9</span><span class="open">10</span><span class="picked">11</span><span class="open">12</span><span>13</span><span>14</span><span>15</span>
+        <span>16</span><span class="open">17</span><span>18</span><span class="open">19</span><span>20</span><span>21</span><span>22</span>
+        <span>23</span><span class="open">24</span><span>25</span><span class="open">26</span><span>27</span><span>28</span><span>29</span>
+        <span>30</span><span></span><span></span><span></span><span></span><span></span><span></span>
+      </div>
+      <p class="slots-title">Wednesday 11 November</p>
+      <div class="slots"><span>9:00</span><span class="picked">10:30</span><span>14:00</span><span>16:30</span></div>
+      <p class="tz">Times shown in your time zone</p>
+      <a class="btn" href="#">Confirm 10:30</a>
+    </div>
+  </section>
+
+  <!-- ═══════════ OPTION B ═══════════ -->
+  <div class="label">
+    <span class="tag">B</span><span class="what">What to expect, then one button</span>
+    <span class="why">Closest to what you have now, but it explains the call step by step so it feels less like a leap. The button opens your booking page.</span>
+  </div>
+
+  <section class="b" aria-label="Option B">
+    <div class="b-top">
+      <h2>Let's begin with a conversation.</h2>
+      <p class="lead">A free, unhurried call to listen to your mission and see, honestly, whether I'm the right person to walk with you.</p>
+    </div>
+    <div class="b-steps">
+      <div class="b-step"><div class="n">一</div><h3>Before</h3><p>You pick a time and share a few lines about your organisation, so I arrive prepared.</p></div>
+      <div class="b-step"><div class="n">二</div><h3>During</h3><p>45–60 minutes on video. We talk about your mission, where you feel stuck and what you dream of building.</p></div>
+      <div class="b-step"><div class="n">三</div><h3>After</h3><p>Within a few days I send you my thoughts and, if we're aligned, a proposal for the diagnosis.</p></div>
+    </div>
+    <div class="b-cta">
+      <a class="btn light" href="#">Choose a time</a>
+      <ul class="facts"><li>Free</li><li>45–60 min</li><li>English or Spanish</li></ul>
+    </div>
+  </section>
+
+  <!-- ═══════════ OPTION C ═══════════ -->
+  <div class="label">
+    <span class="tag">C</span><span class="what">A short note first, then pick a time</span>
+    <span class="why">Visitors tell you about their mission before choosing a time. It feels the most personal, and you arrive at each call already knowing their story.</span>
+  </div>
+
+  <section class="c" aria-label="Option C">
+    <div class="c-left">
+      <svg class="bird" aria-hidden="true" viewBox="0 0 200 80" width="120" height="48" fill="none" stroke="#1A1A1A" stroke-width="1.2" stroke-opacity="0.45"><path d="M20 44 C34 30 44 30 52 42 C60 28 72 24 88 34"/><path d="M112 22 C122 13 129 13 135 21 C141 12 149 10 160 16"/></svg>
+      <h2>Let's begin with a conversation.</h2>
+      <p class="lead">Tell me a little about your mission. Then choose a time that suits you.</p>
+      <ul class="facts"><li>Free</li><li>45–60 min</li><li>Video call</li><li>English or Spanish</li></ul>
+      <p class="quote">"I read every note before we talk, so our time goes to what matters most to you."</p>
+      <p class="sig">Valentina</p>
+    </div>
+    <div class="c-right">
+      <div class="step-bar"><span class="on">1 · About you</span><span>2 · Pick a time</span></div>
+      <div class="field"><label for="c-name">Your name</label><input id="c-name" placeholder="Ana Pérez"></div>
+      <div class="field"><label for="c-org">Organisation</label><input id="c-org" placeholder="Fundación…"></div>
+      <div class="field"><label for="c-mission">Your mission, in a few lines <span class="hint">(optional)</span></label><textarea id="c-mission" placeholder="What you do, where, and what you'd like help with"></textarea></div>
+      <div class="field"><label for="c-lang">Language for the call</label><select id="c-lang"><option>English</option><option>Español</option></select></div>
+      <a class="btn" href="#">Next: pick a time →</a>
+      <small>Takes about a minute.</small>
+    </div>
+  </section>
+
+  <footer class="note">This is a design sketch only: the calendar and form don't work yet. Whichever you choose, the real booking can run on an open-source tool that syncs with your Google Calendar.</footer>
+
+</div>
+</body>
+</html>
